@@ -55,11 +55,6 @@ export const Register = () => {
       email: formData.email,
       password: formData.password,
     }, 
-
-    { 
-       headers: {  "Content-Type": "application/json"}, 
-    }
-
     )
     .then((result) =>{
      console.log(result); 

@@ -6,6 +6,7 @@ import { Link , useNavigate} from "react-router-dom";
 
 import logo from "../images/logo.svg";
 import "../css/Login.css";
+import axios from "axios";
 
 
 export const Login = () => {
@@ -37,6 +38,33 @@ export const Login = () => {
     setErrors(form_validation(formData));
     Navigate("/Forgot"); 
   }
+  const api = (e) =>{
+    e.preventDefault();
+
+    axios
+    .post("https://himtreasure.com/himapi/api/login",{
+      email: formData.email,
+      password: formData.password,
+    },
+    )
+    .then((result) =>{
+      console.log(result); 
+ 
+      setFormData({
+       name: "",
+       email: "",
+       password: "",
+      });
+      
+      localStorage.setItem("user", JSON.stringify(result.data));
+      Navigate("/Login"); 
+     }) 
+ 
+     .catch((error) => {
+       console.log(error);
+     });
+  };
+  
   return (
     <section className="vh-100">
       <div className="container-fluid h-custom">
@@ -54,7 +82,7 @@ export const Login = () => {
             </p>
             <h3>Sign in to EdTech.</h3>
             <h5 className="mb-5 text-secondary ">Enter your details below.</h5>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={api}>
               <div className="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
                 <button
                   type="button"
