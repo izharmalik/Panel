@@ -1,13 +1,17 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import { FaFacebook, FaTwitter, FaGoogle } from "react-icons/fa";
 import illustration_register from "../../src/images/illustration_register.png";
-import { Link } from "react-router-dom";
-import logo from "../images/logo.svg";
-import "../css/Login.css";
+import { Link , useNavigate } from "react-router-dom";
 import form_validation from "./form_validation";
+import logo from "../images/logo.svg";
+
+import "../css/Login.css";
+import axios from "axios";
 
 
-export const Register = () => {
+
+export const Register = () => { 
+
   const [formData, setFormData] = useState({
     firstname: "",
     lastname: "",
@@ -29,7 +33,7 @@ export const Register = () => {
   function handleSubmit (e)  {
     e.preventDefault (); 
 
-    console.log(formData);
+  console.log(formData);
     setFormData({
       firstname: "",
       lastname: "",
@@ -39,6 +43,41 @@ export const Register = () => {
     });
     setErrors(form_validation(formData));
   }
+
+  const Navigate = useNavigate();
+
+  const api = (e) =>{
+    e.preventDefault();
+
+    axios
+    .post("https://himtreasure.com/himapi/api/register",{
+      name: formData.firstname,
+      email: formData.email,
+      password: formData.password,
+    }, 
+
+    { 
+       headers: {  "Content-Type": "application/json"}, 
+    }
+
+    )
+    .then((result) =>{
+     console.log(result); 
+
+     setFormData({
+      name: "",
+      email: "",
+      password: "",
+     });
+     
+     localStorage.setItem("user", JSON.stringify(result.data));
+     Navigate("/Login"); 
+    }) 
+
+    .catch((error) => {
+      console.log(error);
+    });
+  };
 
   return (
     <section className="vh-100">
@@ -53,13 +92,13 @@ export const Register = () => {
           </div>
           <div className="col-md-8 col-lg-6 col-xl-5 offset-xl-1  mt-5 mb-5">
             <p className="  pt-1 mb-5 text-end">
-              Don't have an account? <Link to="/">Login</Link>
+              Don't have an account? <Link to="/login">Login</Link>
             </p>
             <h3>Get started absolutely free.</h3>
             <h5 className="mb-5 text-secondary ">
               Free forever. No credit card needed.
             </h5>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={api}>
               <div className="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
                 <button
                   type="button"
@@ -167,9 +206,7 @@ export const Register = () => {
                     Remember me
                   </label>
                 </div>
-                <a href="#!" className="text-body">
-                  Forgot password?
-                </a>
+                 <Link to="/Forgot">Forgot password?</Link>
               </div>
 
               <div className="text-center text-lg-start mt-4 pt-2 ">

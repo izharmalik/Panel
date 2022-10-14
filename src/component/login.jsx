@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { FaFacebook, FaTwitter, FaGoogle } from "react-icons/fa";
 import illustration_login from "../../src/images/illustration_login.png";
-import { Link } from "react-router-dom";
+import form_validation from "./form_validation";
+import { Link , useNavigate} from "react-router-dom";
+
 import logo from "../images/logo.svg";
 import "../css/Login.css";
-import form_validation from "./form_validation";
+
 
 export const Login = () => {
   const [formData, setFormData] = useState({
@@ -17,6 +19,8 @@ export const Login = () => {
     email: false,
     password: false,
   });
+  
+  const Navigate = useNavigate();
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -31,6 +35,7 @@ export const Login = () => {
       checked: false,
     });
     setErrors(form_validation(formData));
+    Navigate("/Forgot"); 
   }
   return (
     <section className="vh-100">
